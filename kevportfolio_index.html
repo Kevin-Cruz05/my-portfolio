@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive — Design Catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #edeae3;
+    --paper-raised: #f7f5f0;
+    --ink: #201e1b;
+    --ink-soft: #55524b;
+    --graphite: #6b6862;
+    --line: #d3cfc5;
+    --registration: #c1432e;
+    --shadow: rgba(32, 30, 27, 0.12);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--registration);
+    margin: 0 0 10px;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.02;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+  }
+
+  .count-block {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .count-block strong {
+    display: block;
+    font-size: 28px;
+    color: var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+  }
+
+  .auth-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
+  }
+  .auth-btn:hover { background: var(--ink); color: var(--paper); }
+  .auth-btn.signed-in { border-color: var(--registration); color: var(--registration); }
+  .auth-btn.signed-in:hover { background: var(--registration); color: #fff; }
+
+  /* ---- Dropzone ---- */
+  .dropzone {
+    position: relative;
+    border: 1px solid var(--ink);
+    background: var(--paper-raised);
+    padding: 40px 32px;
+    margin-bottom: 56px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    display: none;
+  }
+  .dropzone.visible { display: block; }
+
+  .dropzone.drag-over {
+    background: #fff;
+    border-color: var(--registration);
+  }
+
+  .reg-mark {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+  }
+  .reg-mark::before, .reg-mark::after {
+    content: "";
+    position: absolute;
+    background: var(--ink);
+  }
+  .reg-mark::before { width: 100%; height: 1px; top: 50%; left: 0; }
+  .reg-mark::after { width: 1px; height: 100%; left: 50%; top: 0; }
+  .reg-tl { top: -8px; left: -8px; }
+  .reg-tr { top: -8px; right: -8px; }
+  .reg-bl { bottom: -8px; left: -8px; }
+  .reg-br { bottom: -8px; right: -8px; }
+
+  .dropzone-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    margin: 0 0 6px;
+  }
+
+  .dropzone-sub {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .dropzone-sub .hl {
+    color: var(--registration);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .upload-status {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--registration);
+    margin-top: 10px;
+    min-height: 16px;
+  }
+
+  #file-input { display: none; }
+
+  .category-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+
+  .category-row label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  #category-select, #category-custom {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 6px 10px;
+    border: 1px solid var(--ink);
+    background: #fff;
+    color: var(--ink);
+  }
+
+  #category-custom {
+    display: none;
+    width: 140px;
+  }
+  #category-custom.visible { display: inline-block; }
+
+  /* ---- Filter tabs ---- */
+  .filter-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .filter-tab {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border: 1px solid var(--line);
+    background: var(--paper-raised);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .filter-tab:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .filter-tab.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .placard .category {
+    color: var(--registration);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---- Gallery ---- */
+  .gallery {
+    columns: 3 280px;
+    column-gap: 24px;
+  }
+
+  @media (max-width: 700px) {
+    .gallery { columns: 1 280px; }
+  }
+
+  .piece {
+    break-inside: avoid;
+    margin-bottom: 24px;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: rise 0.45s ease forwards;
+    position: relative;
+  }
+
+  @keyframes rise {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .piece img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid var(--line);
+    cursor: zoom-in;
+    background: var(--line);
+  }
+
+  .piece:hover {
+    box-shadow: 0 6px 18px var(--shadow);
+  }
+
+  .placard {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 4px 10px;
+    padding: 10px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+
+  .placard .no {
+    color: var(--registration);
+    font-weight: 500;
+  }
+
+  .placard .title {
+    grid-column: 1 / -1;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 600;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 26px;
+    height: 26px;
+    background: rgba(32,30,27,0.72);
+    color: #fff;
+    border: none;
+    border-radius: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    display: none;
+  }
+  .piece:hover .remove-btn.enabled { opacity: 1; }
+  .remove-btn.enabled { display: block; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+
+  /* ---- Lightbox ---- */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(32,30,27,0.92);
+    z-index: 50;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    cursor: zoom-out;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  }
+  .lightbox-caption {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: #eee;
+  }
+
+  /* ---- Login modal ---- */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(32,30,27,0.6);
+    z-index: 60;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-backdrop.open { display: flex; }
+
+  .modal {
+    background: var(--paper-raised);
+    border: 1px solid var(--ink);
+    padding: 32px;
+    width: 320px;
+    max-width: 90vw;
+  }
+  .modal h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    margin: 0 0 20px;
+  }
+  .modal input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border: 1px solid var(--line);
+    background: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .modal-actions button {
+    flex: 1;
+    padding: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    border: 1px solid var(--ink);
+    background: none;
+  }
+  .modal-actions .primary { background: var(--ink); color: #fff; }
+  .modal-error {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--registration);
+    min-height: 16px;
+    margin: 0 0 8px;
+  }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header>
+    <div>
+      <p class="eyebrow">Design Archive — Vol. 01</p>
+      <h1>Catalog of Work</h1>
+    </div>
+    <div class="header-right">
+      <div class="count-block">
+        <strong id="piece-count">000</strong>
+        pieces on record
+      </div>
+      <button class="auth-btn" id="auth-btn">Sign In</button>
+    </div>
+  </header>
+
+  <div class="dropzone" id="dropzone">
+    <div class="reg-mark reg-tl"></div>
+    <div class="reg-mark reg-tr"></div>
+    <div class="reg-mark reg-bl"></div>
+    <div class="reg-mark reg-br"></div>
+    <p class="dropzone-title">Drop designs here</p>
+    <p class="dropzone-sub">or <span class="hl">browse your files</span> — JPG, PNG, WEBP, GIF, SVG</p>
+    <input type="file" id="file-input" accept="image/*" multiple>
+    <div class="category-row" onclick="event.stopPropagation()">
+      <label for="category-select">Category</label>
+      <select id="category-select">
+        <option value="Poster">Poster</option>
+        <option value="Project">Project</option>
+        <option value="Graphic">Graphic</option>
+        <option value="Branding">Branding</option>
+        <option value="Illustration">Illustration</option>
+        <option value="__custom__">+ Add new...</option>
+      </select>
+      <input type="text" id="category-custom" placeholder="New category name">
+    </div>
+    <p class="upload-status" id="upload-status"></p>
+  </div>
+
+  <div class="filter-tabs" id="filter-tabs"></div>
+
+  <div class="gallery" id="gallery">
+    <div class="empty-state" id="empty-state">No pieces catalogued yet.</div>
+  </div>
+
+  <footer>Design Archive — powered by Firebase</footer>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img" src="" alt="">
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal">
+    <h2>Sign in to manage archive</h2>
+    <p class="modal-error" id="modal-error"></p>
+    <input type="email" id="modal-email" placeholder="Email">
+    <input type="password" id="modal-password" placeholder="Password">
+    <div class="modal-actions">
+      <button id="modal-cancel">Cancel</button>
+      <button class="primary" id="modal-submit">Sign In</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+<script>
+  // =====================================================================
+  // STEP 1: Paste your Firebase config below (from Firebase Console ->
+  // Project settings -> General -> Your apps -> SDK setup and config)
+  // =====================================================================
+  const firebaseConfig = {
+  apiKey: "AIzaSyCcWlG3d4zWsphxdoNsQt7LopR9A5Vc0zc",
+  authDomain: "my-portfolio-3e4b6.firebaseapp.com",
+  projectId: "my-portfolio-3e4b6",
+  storageBucket: "my-portfolio-3e4b6.firebasestorage.app",
+  messagingSenderId: "287085051834",
+  appId: "1:287085051834:web:b3747f9a7f68e6d9d26783",
+  measurementId: "G-PHVHYWQD71"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
+
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('file-input');
+  const gallery = document.getElementById('gallery');
+  const emptyState = document.getElementById('empty-state');
+  const pieceCount = document.getElementById('piece-count');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+  const uploadStatus = document.getElementById('upload-status');
+
+  const authBtn = document.getElementById('auth-btn');
+  const modalBackdrop = document.getElementById('modal-backdrop');
+  const modalEmail = document.getElementById('modal-email');
+  const modalPassword = document.getElementById('modal-password');
+  const modalSubmit = document.getElementById('modal-submit');
+  const modalCancel = document.getElementById('modal-cancel');
+  const modalError = document.getElementById('modal-error');
+
+  const categorySelect = document.getElementById('category-select');
+  const categoryCustom = document.getElementById('category-custom');
+  const filterTabs = document.getElementById('filter-tabs');
+
+  let isSignedIn = false;
+  let pieceElements = {};
+  let allPieces = [];
+  let activeFilter = 'All';
+
+  categorySelect.addEventListener('change', () => {
+    categoryCustom.classList.toggle('visible', categorySelect.value === '__custom__');
+  });
+
+  function getSelectedCategory() {
+    if (categorySelect.value === '__custom__') {
+      return categoryCustom.value.trim() || 'Uncategorized';
+    }
+    return categorySelect.value;
+  }
+
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  function formatDate(iso) {
+    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+  }
+
+  function updateCount(n) {
+    pieceCount.textContent = String(n).padStart(3, '0');
+    emptyState.style.display = n ? 'none' : 'block';
+  }
+
+  function renderPiece(id, piece) {
+    const el = document.createElement('div');
+    el.className = 'piece';
+
+    const img = document.createElement('img');
+    img.src = piece.imageURL;
+    img.alt = piece.name;
+    img.addEventListener('click', () => openLightbox(piece));
+    el.appendChild(img);
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-btn' + (isSignedIn ? ' enabled' : '');
+    removeBtn.textContent = '✕';
+    removeBtn.title = 'Remove from catalog';
+    removeBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!isSignedIn) return;
+      if (!confirm('Remove "' + piece.name + '" from the archive?')) return;
+      try {
+        await storage.ref(piece.storagePath).delete();
+      } catch (err) { console.warn('Storage delete failed', err); }
+      await db.collection('pieces').doc(id).delete();
+    });
+    el.appendChild(removeBtn);
+
+    const placard = document.createElement('div');
+    placard.className = 'placard';
+    placard.innerHTML = `
+      <div class="title">${piece.name}</div>
+      <span class="no">No. ${piece.catNo}</span>
+      <span class="category">${piece.category || 'Uncategorized'}</span>
+      <span>${piece.dims}</span>
+    `;
+    el.appendChild(placard);
+
+    gallery.appendChild(el);
+    pieceElements[id] = el;
+  }
+
+  function openLightbox(piece) {
+    lightboxImg.src = piece.imageURL;
+    lightboxCaption.textContent = `No. ${piece.catNo} — ${piece.name} — ${piece.category || 'Uncategorized'} — ${piece.dims} — ${formatDate(piece.dateISO)}`;
+    lightbox.classList.add('open');
+  }
+  lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
+
+  function renderFilterTabs() {
+    const categories = ['All', ...new Set(allPieces.map(p => p.data.category || 'Uncategorized'))];
+    filterTabs.innerHTML = '';
+    categories.forEach(cat => {
+      const tab = document.createElement('button');
+      tab.className = 'filter-tab' + (cat === activeFilter ? ' active' : '');
+      tab.textContent = cat;
+      tab.addEventListener('click', () => {
+        activeFilter = cat;
+        renderGallery();
+      });
+      filterTabs.appendChild(tab);
+    });
+  }
+
+  function renderGallery() {
+    gallery.innerHTML = '';
+    pieceElements = {};
+    renderFilterTabs();
+
+    const visible = activeFilter === 'All'
+      ? allPieces
+      : allPieces.filter(p => (p.data.category || 'Uncategorized') === activeFilter);
+
+    visible.forEach(p => renderPiece(p.id, p.data));
+
+    if (visible.length === 0) {
+      gallery.appendChild(emptyState);
+    }
+    updateCount(allPieces.length);
+  }
+
+  // ---- Live sync from Firestore, ordered by catalog number ----
+  db.collection('pieces').orderBy('catNo', 'asc').onSnapshot((snapshot) => {
+    allPieces = [];
+    snapshot.forEach((doc) => allPieces.push({ id: doc.id, data: doc.data() }));
+    renderGallery();
+  }, (err) => {
+    console.error('Firestore sync error', err);
+    uploadStatus.textContent = 'Could not load archive — check Firebase config.';
+  });
+
+  // ---- Upload handling ----
+  async function handleFiles(fileList) {
+    if (!isSignedIn) return;
+    const category = getSelectedCategory();
+    const countSnap = await db.collection('pieces').get();
+    let counter = countSnap.size;
+
+    for (const file of [...fileList]) {
+      if (!file.type.startsWith('image/')) continue;
+      counter += 1;
+      const catNo = String(counter).padStart(3, '0');
+      uploadStatus.textContent = `Uploading ${file.name}...`;
+
+      try {
+        const dims = await getImageDimensions(file);
+        const path = `pieces/${Date.now()}-${file.name}`;
+        const ref = storage.ref(path);
+        await ref.put(file);
+        const imageURL = await ref.getDownloadURL();
+
+        await db.collection('pieces').add({
+          name: file.name.replace(/\.[^/.]+$/, ''),
+          imageURL,
+          storagePath: path,
+          dims: `${dims.width}×${dims.height}px`,
+          size: formatBytes(file.size),
+          dateISO: new Date().toISOString(),
+          catNo,
+          category
+        });
+      } catch (err) {
+        console.error(err);
+        uploadStatus.textContent = 'Upload failed — check Firebase config/rules.';
+        return;
+      }
+    }
+    uploadStatus.textContent = '';
+  }
+
+  function getImageDimensions(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  dropzone.addEventListener('click', () => { if (isSignedIn) fileInput.click(); });
+  fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+  ['dragenter', 'dragover'].forEach(evt =>
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      if (isSignedIn) dropzone.classList.add('drag-over');
+    })
+  );
+  ['dragleave', 'drop'].forEach(evt =>
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('drag-over');
+    })
+  );
+  dropzone.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files));
+
+  // ---- Auth UI ----
+  authBtn.addEventListener('click', () => {
+    if (isSignedIn) {
+      auth.signOut();
+    } else {
+      modalBackdrop.classList.add('open');
+      modalError.textContent = '';
+      modalEmail.value = '';
+      modalPassword.value = '';
+      modalEmail.focus();
+    }
+  });
+
+  modalCancel.addEventListener('click', () => modalBackdrop.classList.remove('open'));
+
+  modalSubmit.addEventListener('click', async () => {
+    modalError.textContent = '';
+    try {
+      await auth.signInWithEmailAndPassword(modalEmail.value.trim(), modalPassword.value);
+      modalBackdrop.classList.remove('open');
+    } catch (err) {
+      modalError.textContent = 'Sign-in failed — check email/password.';
+    }
+  });
+
+  [modalEmail, modalPassword].forEach(input =>
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') modalSubmit.click(); })
+  );
+
+  auth.onAuthStateChanged((user) => {
+    isSignedIn = !!user;
+    authBtn.textContent = isSignedIn ? 'Sign Out' : 'Sign In';
+    authBtn.classList.toggle('signed-in', isSignedIn);
+    dropzone.classList.toggle('visible', isSignedIn);
+    document.querySelectorAll('.remove-btn').forEach(btn => btn.classList.toggle('enabled', isSignedIn));
+  });
+</script>
+
+</body>
+</html>
