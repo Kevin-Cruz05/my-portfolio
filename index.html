@@ -3,325 +3,402 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Archive — Design Catalog</title>
+<title>Kevin Cruz — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --paper: #edeae3;
-    --paper-raised: #f7f5f0;
-    --ink: #201e1b;
-    --ink-soft: #55524b;
-    --graphite: #6b6862;
-    --line: #d3cfc5;
-    --registration: #c1432e;
-    --shadow: rgba(32, 30, 27, 0.12);
+    --ink: #0B0B0C;
+    --cobalt: #1E3A8A;
+    --blue: #2F5FFF;
+    --red: #E8262A;
+    --paper: #FFFFFF;
+    --off: #F2F1ED;
+    --shadow-off: 7px;
   }
 
   * { box-sizing: border-box; }
 
+  html { scroll-behavior: smooth; }
+
   body {
     margin: 0;
-    background: var(--paper);
-    background-image:
-      linear-gradient(var(--line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line) 1px, transparent 1px);
-    background-size: 32px 32px;
-    background-position: -1px -1px;
+    background: var(--off);
     color: var(--ink);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
+    font-family: 'Archivo', sans-serif;
+    overflow-x: hidden;
   }
 
-  .page {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 48px 32px 96px;
+  ::selection { background: var(--red); color: var(--paper); }
+
+  h1, h2, h3, .display {
+    font-family: 'Anton', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 0.92;
+    margin: 0;
   }
 
+  .mono {
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  a { color: inherit; }
+
+  .halftone {
+    background-image: radial-gradient(var(--ink) 1.4px, transparent 1.4px);
+    background-size: 14px 14px;
+  }
+
+  /* ---------- Hard-offset comic shadow, the signature move ---------- */
+  
+  .pop {
+  position: relative;
+  box-shadow: var(--shadow-off) var(--shadow-off) 0 0 var(--ink);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.pop:hover,
+.pop:active {
+  transform: translate(3px, 3px);
+  box-shadow: 3px 3px 0 0 var(--ink);
+}
+
+  /* ==================== ADAPTIVE HEADER ==================== */
   header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    gap: 24px;
-    padding-bottom: 28px;
-    border-bottom: 1px solid var(--ink);
-    margin-bottom: 40px;
-    flex-wrap: wrap;
+    align-items: center;
+    padding: 20px 32px;
+    background: transparent;
+    border-bottom: 3px solid transparent;
+    transition: background 0.25s ease, border-color 0.25s ease, padding 0.25s ease;
+  }
+  header.scrolled {
+    background: var(--ink);
+    border-bottom: 3px solid var(--red);
+    padding: 12px 32px;
   }
 
-  .eyebrow {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--registration);
-    margin: 0 0 10px;
-  }
-
-  h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: clamp(32px, 5vw, 52px);
-    line-height: 1.02;
-    margin: 0;
-    letter-spacing: -0.01em;
-  }
-
-  .header-right {
+  .logo-mark {
     display: flex;
-    align-items: flex-end;
-    gap: 24px;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    color: var(--paper);
+    text-transform: uppercase;
+    text-decoration: none;
   }
+  .logo-dot {
+    width: 14px; height: 14px;
+    background: var(--red);
+    border-radius: 50%;
+    border: 2px solid var(--paper);
+    transition: transform 0.3s ease;
+  }
+  header.scrolled .logo-dot { transform: rotate(180deg) scale(1.15); }
 
-  .count-block {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    color: var(--ink-soft);
-    text-align: right;
-    line-height: 1.6;
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
   }
-
-  .count-block strong {
-    display: block;
-    font-size: 28px;
-    color: var(--ink);
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
+  nav a.navlink {
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--paper);
+    text-decoration: none;
+    padding-bottom: 3px;
+    border-bottom: 2px solid transparent;
   }
+  nav a.navlink:hover { border-color: var(--red); }
 
   .auth-btn {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Space Mono', monospace;
     font-size: 11px;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    background: none;
-    border: 1px solid var(--ink);
+    background: var(--paper);
+    border: 2px solid var(--ink);
     color: var(--ink);
     padding: 8px 14px;
     cursor: pointer;
-    transition: background 0.15s ease, color 0.15s ease;
-    white-space: nowrap;
+    --shadow-off: 4px;
   }
-  .auth-btn:hover { background: var(--ink); color: var(--paper); }
-  .auth-btn.signed-in { border-color: var(--registration); color: var(--registration); }
-  .auth-btn.signed-in:hover { background: var(--registration); color: #fff; }
+  .auth-btn.signed-in { background: var(--red); color: var(--paper); border-color: var(--ink); }
 
-  /* ---- Dropzone ---- */
-  .dropzone {
+  @media (max-width: 720px) {
+    nav .navlink { display: none; }
+  }
+
+  /* ==================== HERO — SCROLL-SCRUB VIDEO ==================== */
+  .hero {
     position: relative;
-    border: 1px solid var(--ink);
-    background: var(--paper-raised);
-    padding: 40px 32px;
-    margin-bottom: 56px;
-    text-align: center;
-    cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease;
-    display: none;
+    height: 220vh; /* scroll runway drives the scrub */
   }
-  .dropzone.visible { display: block; }
-
-  .dropzone.drag-over {
-    background: #fff;
-    border-color: var(--registration);
-  }
-
-  .reg-mark {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    pointer-events: none;
-  }
-  .reg-mark::before, .reg-mark::after {
-    content: "";
-    position: absolute;
-    background: var(--ink);
-  }
-  .reg-mark::before { width: 100%; height: 1px; top: 50%; left: 0; }
-  .reg-mark::after { width: 1px; height: 100%; left: 50%; top: 0; }
-  .reg-tl { top: -8px; left: -8px; }
-  .reg-tr { top: -8px; right: -8px; }
-  .reg-bl { bottom: -8px; left: -8px; }
-  .reg-br { bottom: -8px; right: -8px; }
-
-  .dropzone-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 20px;
-    margin: 0 0 6px;
-  }
-
-  .dropzone-sub {
-    font-size: 14px;
-    color: var(--ink-soft);
-    margin: 0;
-  }
-
-  .dropzone-sub .hl {
-    color: var(--registration);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .upload-status {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--registration);
-    margin-top: 10px;
-    min-height: 16px;
-  }
-
-  #file-input { display: none; }
-
-  .category-row {
+  .hero-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--cobalt);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+  }
+  .hero-stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.5) 1.6px, transparent 1.6px);
+    background-size: 18px 18px;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+  #name-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+  }
+  .hero-fallback {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 24px;
+  }
+  .hero-fallback h1 {
+    font-size: clamp(56px, 14vw, 180px);
+    color: var(--paper);
+    -webkit-text-stroke: 3px var(--ink);
+    text-shadow: 8px 8px 0 var(--red);
+  }
+  .hero-fallback p.mono {
+    color: var(--paper);
+    font-size: 13px;
     margin-top: 18px;
-    flex-wrap: wrap;
   }
-
-  .category-row label {
-    font-family: 'IBM Plex Mono', monospace;
+  .scroll-cue {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--paper);
     font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
   }
+  .scroll-cue .bar {
+    width: 2px; height: 40px;
+    background: var(--paper);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-cue .bar::after {
+    content: "";
+    position: absolute;
+    top: -100%; left: 0; right: 0; height: 100%;
+    background: var(--red);
+    animation: scrollcue 1.6s ease-in-out infinite;
+  }
+  @keyframes scrollcue { to { top: 100%; } }
 
-  #category-select, #category-custom {
-    font-family: 'IBM Plex Mono', monospace;
+  /* ==================== SECTIONS ==================== */
+  section { position: relative; }
+
+  .eyebrow {
+    color: var(--red);
     font-size: 12px;
-    padding: 6px 10px;
-    border: 1px solid var(--ink);
-    background: #fff;
-    color: var(--ink);
+    margin-bottom: 10px;
   }
 
-  #category-custom {
-    display: none;
-    width: 140px;
+  .center { text-align: center; }
+
+  /* ---- About ---- */
+  .about-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 130px 32px 100px;
   }
-  #category-custom.visible { display: inline-block; }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+  @media (max-width: 760px) {
+    .about-grid { grid-template-columns: 1fr; }
+  }
+  .about-portrait { --shadow-off: 8px; }
+  .portrait-box {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    background: var(--cobalt);
+    border: 3px solid var(--ink);
+    filter: grayscale(0.1) contrast(1.05);
+  }
+  .portrait-cap {
+    font-size: 11px;
+    color: #555;
+    margin-top: 10px;
+  }
+  .about-copy h2 { font-size: clamp(28px, 4.5vw, 44px); }
+  .about-copy .location { font-size: 12px; color: var(--red); margin: 10px 0 20px; }
+  .about-copy p {
+    font-size: 16px;
+    line-height: 1.65;
+    margin-top: 16px;
+    color: #333;
+  }
+  .skill-tags {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 26px;
+  }
+  .skill-tag {
+    font-size: 10.5px;
+    padding: 7px 12px;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+  }
+
+  /* ---- Experience / Education panel sections ---- */
+  .panel-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 32px 90px;
+  }
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .timeline-item {
+    --shadow-off: 6px;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    padding: 24px 26px;
+  }
+  .timeline-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+  }
+  .timeline-item h3 { font-size: 19px; text-transform: none; letter-spacing: 0; }
+  .timeline-date { font-size: 11px; color: var(--blue); white-space: nowrap; }
+  .timeline-org { font-size: 12px; color: var(--red); margin: 6px 0 12px; }
+  .timeline-item ul { margin: 0; padding-left: 20px; }
+  .timeline-item li { font-size: 14.5px; line-height: 1.55; margin-bottom: 6px; color: #333; }
+  .timeline-item p { font-size: 14.5px; line-height: 1.6; color: #333; }
+
+  .cert-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin-top: 36px;
+  }
+  .cert-card {
+    --shadow-off: 5px;
+    background: var(--off);
+    border: 3px solid var(--ink);
+    padding: 18px 20px;
+  }
+  .cert-issued { font-size: 10px; color: var(--red); margin-bottom: 8px; }
 
   /* ---- Filter tabs ---- */
   .filter-tabs {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 28px;
+    gap: 14px;
+    justify-content: center;
+    margin: 0 32px 48px;
   }
-
   .filter-tab {
-    font-family: 'IBM Plex Mono', monospace;
+    --shadow-off: 4px;
+    font-family: 'Space Mono', monospace;
     font-size: 11px;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    padding: 7px 14px;
-    border: 1px solid var(--line);
-    background: var(--paper-raised);
-    color: var(--ink-soft);
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  .filter-tab:hover {
-    border-color: var(--ink);
+    padding: 9px 16px;
+    border: 2px solid var(--ink);
+    background: var(--paper);
     color: var(--ink);
+    cursor: pointer;
   }
+  .filter-tab.active { background: var(--blue); color: var(--paper); }
 
-  .filter-tab.active {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: var(--paper);
+  /* ---- Product / gallery grid ---- */
+  .work {
+    padding: 20px 32px 100px;
+    max-width: 1280px;
+    margin: 0 auto;
   }
-
-  .placard .category {
-    color: var(--registration);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  /* ---- Gallery ---- */
   .gallery {
-    columns: 3 280px;
-    column-gap: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 44px 36px;
   }
-
-  @media (max-width: 700px) {
-    .gallery { columns: 1 280px; }
-  }
-
   .piece {
-    break-inside: avoid;
-    margin-bottom: 24px;
-    background: var(--paper-raised);
-    border: 1px solid var(--line);
+    --shadow-off: 8px;
+    background: var(--paper);
+    border: 3px solid var(--ink);
     opacity: 0;
-    transform: translateY(10px);
-    animation: rise 0.45s ease forwards;
+    transform: translateY(14px);
+    animation: rise 0.5s ease forwards;
+  }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+  .piece-media {
     position: relative;
+    border-bottom: 3px solid var(--ink);
+    background: var(--off);
+    overflow: hidden;
   }
-
-  @keyframes rise {
-    to { opacity: 1; transform: translateY(0); }
-  }
-
   .piece img {
     display: block;
     width: 100%;
-    height: auto;
-    border-bottom: 1px solid var(--line);
+    height: 260px;
+    object-fit: cover;
     cursor: zoom-in;
-    background: var(--line);
+    filter: grayscale(0.15) contrast(1.05);
+    transition: transform 0.35s ease;
   }
+  .piece:hover img { transform: scale(1.06); }
 
-  .piece:hover {
-    box-shadow: 0 6px 18px var(--shadow);
-  }
-
-  .placard {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: baseline;
-    gap: 4px 10px;
-    padding: 10px 14px;
-    font-family: 'IBM Plex Mono', monospace;
+  .piece-badge {
+    position: absolute;
+    top: 10px; left: 10px;
+    background: var(--red);
+    color: var(--paper);
+    font-family: 'Space Mono', monospace;
     font-size: 11px;
-    color: var(--ink-soft);
-  }
-
-  .placard .no {
-    color: var(--registration);
-    font-weight: 500;
-  }
-
-  .placard .title {
-    grid-column: 1 / -1;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 14px;
-    color: var(--ink);
-    font-weight: 600;
-    margin-bottom: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    padding: 4px 8px;
+    border: 2px solid var(--ink);
   }
 
   .remove-btn {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 26px;
-    height: 26px;
-    background: rgba(32,30,27,0.72);
-    color: #fff;
-    border: none;
-    border-radius: 2px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 14px;
-    line-height: 1;
+    top: 10px; right: 10px;
+    width: 28px; height: 28px;
+    background: var(--ink);
+    color: var(--paper);
+    border: 2px solid var(--paper);
+    font-family: 'Space Mono', monospace;
     cursor: pointer;
     opacity: 0;
     transition: opacity 0.15s ease;
@@ -330,133 +407,372 @@
   .piece:hover .remove-btn.enabled { opacity: 1; }
   .remove-btn.enabled { display: block; }
 
+
+  .edit-controls {
+  display: none;
+  gap: 6px;
+  padding: 10px 16px 0;
+}
+.piece.editable .edit-controls { display: flex; align-items: center; }
+.edit-controls select {
+  font-family: 'Space Mono', monospace;
+  font-size: 10.5px;
+  padding: 4px 8px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+}
+
+  
+  .placard {
+    padding: 14px 16px 16px;
+  }
+  .placard .title {
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .placard .meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10.5px;
+    color: #555;
+  }
+  .placard .meta .category { color: var(--blue); }
+
   .empty-state {
+    grid-column: 1 / -1;
     text-align: center;
     padding: 60px 20px;
-    color: var(--ink-soft);
-    font-size: 14px;
+    color: #666;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
   }
 
-  /* ---- Lightbox ---- */
+  /* ---- Dropzone (admin upload) ---- */
+  .dropzone {
+    --shadow-off: 8px;
+    display: none;
+    border: 3px solid var(--ink);
+    background: var(--paper);
+    padding: 40px 32px;
+    margin: 0 32px 56px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    cursor: pointer;
+  }
+  .dropzone.visible { display: block; }
+  .dropzone.drag-over { background: var(--off); }
+  .dropzone-title { font-family: 'Anton', sans-serif; font-size: 22px; text-transform: uppercase; }
+  .dropzone-sub { font-size: 14px; color: #555; margin-top: 6px; }
+  .dropzone-sub .hl { color: var(--red); text-decoration: underline; }
+  .upload-status { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--red); margin-top: 12px; min-height: 16px; }
+  #file-input { display: none; }
+  .category-row {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    margin-top: 18px; flex-wrap: wrap;
+  }
+  .category-row label { font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase; color: #555; }
+  #category-select, #category-custom {
+    font-family: 'Space Mono', monospace; font-size: 12px; padding: 6px 10px;
+    border: 2px solid var(--ink); background: var(--paper);
+  }
+  #category-custom { display: none; width: 140px; }
+  #category-custom.visible { display: inline-block; }
+
+  /* ==================== CTA ==================== */
+  .cta {
+    background: var(--ink);
+    padding: 110px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(var(--blue) 2px, transparent 2px);
+    background-size: 26px 26px;
+    opacity: 0.35;
+  }
+  .cta-inner { position: relative; z-index: 1; }
+  .cta h2 {
+    color: var(--paper);
+    font-size: clamp(36px, 7vw, 84px);
+    text-shadow: 6px 6px 0 var(--red);
+  }
+  .cta p { color: #ccc; margin-top: 16px; font-size: 16px; }
+
+  .cta-buttons {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 44px;
+    flex-wrap: wrap;
+  }
+  .btn-primary, .btn-secondary {
+    --shadow-off: 6px;
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 18px 38px;
+    border: 3px solid var(--ink);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary { background: var(--red); color: var(--paper); }
+  .btn-secondary { background: var(--paper); color: var(--ink); }
+  .btn-primary.pop::before, .btn-secondary.pop::before { background: var(--blue); }
+
+  /* ==================== LIGHTBOX / MODAL ==================== */
   .lightbox {
     display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(32,30,27,0.92);
-    z-index: 50;
-    align-items: center;
-    justify-content: center;
+    position: fixed; inset: 0;
+    background: rgba(11,11,12,0.94);
+    z-index: 200;
+    align-items: center; justify-content: center;
     padding: 40px;
     cursor: zoom-out;
   }
   .lightbox.open { display: flex; }
-  .lightbox img {
-    max-width: 100%;
-    max-height: 100%;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-  }
+  .lightbox img { max-width: 100%; max-height: 100%; border: 4px solid var(--paper); }
   .lightbox-caption {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: #eee;
+    position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%);
+    font-family: 'Space Mono', monospace; font-size: 12px; color: var(--paper);
   }
 
-  /* ---- Login modal ---- */
   .modal-backdrop {
     display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(32,30,27,0.6);
-    z-index: 60;
-    align-items: center;
-    justify-content: center;
+    position: fixed; inset: 0;
+    background: rgba(11,11,12,0.7);
+    z-index: 210;
+    align-items: center; justify-content: center;
   }
   .modal-backdrop.open { display: flex; }
-
   .modal {
-    background: var(--paper-raised);
-    border: 1px solid var(--ink);
+    --shadow-off: 8px;
+    background: var(--paper);
+    border: 3px solid var(--ink);
     padding: 32px;
-    width: 320px;
-    max-width: 90vw;
+    width: 320px; max-width: 90vw;
   }
-  .modal h2 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 18px;
-    margin: 0 0 20px;
-  }
+  .modal h2 { font-size: 20px; margin-bottom: 20px; }
   .modal input {
-    width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 12px;
-    border: 1px solid var(--line);
-    background: #fff;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
+    width: 100%; padding: 10px 12px; margin-bottom: 12px;
+    border: 2px solid var(--ink); font-family: 'Archivo', sans-serif; font-size: 14px;
   }
-  .modal-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 8px;
-  }
+  .modal-actions { display: flex; gap: 10px; margin-top: 8px; }
   .modal-actions button {
-    flex: 1;
-    padding: 10px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    cursor: pointer;
-    border: 1px solid var(--ink);
-    background: none;
+    flex: 1; padding: 10px; font-family: 'Space Mono', monospace; font-size: 12px;
+    text-transform: uppercase; cursor: pointer; border: 2px solid var(--ink); background: var(--paper);
   }
-  .modal-actions .primary { background: var(--ink); color: #fff; }
-  .modal-error {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--registration);
-    min-height: 16px;
-    margin: 0 0 8px;
-  }
+  .modal-actions .primary { background: var(--ink); color: var(--paper); }
+  .modal-error { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--red); min-height: 16px; margin: 0 0 8px; }
 
   footer {
-    margin-top: 64px;
-    padding-top: 20px;
-    border-top: 1px solid var(--line);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--ink-soft);
+    padding: 28px 32px;
+    background: var(--paper);
+    border-top: 3px solid var(--ink);
     text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: #555;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .piece { animation: none; opacity: 1; transform: none; }
+    .scroll-cue .bar::after { animation: none; }
   }
 </style>
 </head>
 <body>
 
-<div class="page">
-  <header>
-    <div>
-      <p class="eyebrow">Design Archive — Vol. 01</p>
-      <h1>Catalog of Work</h1>
-    </div>
-    <div class="header-right">
-      <div class="count-block">
-        <strong id="piece-count">000</strong>
-        pieces on record
-      </div>
-      <button class="auth-btn" id="auth-btn">Sign In</button>
-    </div>
-  </header>
+<header id="site-header">
+  <a href="#top" class="logo-mark"><span class="logo-dot"></span>KC</a>
+  <nav>
+    <a class="navlink" href="#about">About</a>
+    <a class="navlink" href="#experience">Experience</a>
+    <a class="navlink" href="#work">Work</a>
+    <a class="navlink" href="#contact">Contact</a>
+    <button class="auth-btn pop" id="auth-btn">Sign In</button>
+  </nav>
+</header>
 
-  <div class="dropzone" id="dropzone">
-    <div class="reg-mark reg-tl"></div>
-    <div class="reg-mark reg-tr"></div>
-    <div class="reg-mark reg-bl"></div>
-    <div class="reg-mark reg-br"></div>
-    <p class="dropzone-title">Drop designs here</p>
+<div id="top"></div>
+
+<!-- ==================== HERO ==================== -->
+<div class="hero">
+  <div class="hero-stage halftone" id="hero-stage">
+    <!-- Swap this src for the Higgsfield-generated name video. Scroll position drives currentTime below. -->
+    <video id="name-video" muted playsinline preload="auto">
+      <!-- <source src="assets/name-scrub.mp4" type="video/mp4"> -->
+    </video>
+    <div class="hero-fallback" id="hero-fallback">
+      <h1 class="display">Kevin Cruz</h1>
+      <p class="mono">Human Factors Design &middot; UX Research &middot; Data Analytics</p>
+    </div>
+    <div class="scroll-cue">
+      <span class="mono">Scroll</span>
+      <div class="bar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ABOUT ==================== -->
+<section id="about" class="about-section">
+  <div class="about-grid">
+    <div class="about-portrait pop">
+      <img src="assets/portrait.png" alt="Portrait of Kevin Cruz" class="portrait-box">
+      <p class="mono portrait-cap">Fig. 01 — Portrait</p>
+    </div>
+    <div class="about-copy">
+      <p class="eyebrow mono">01 — About</p>
+      <h2>Where human behavior meets systems design.</h2>
+      <p class="location mono">Gilbert, Arizona, United States</p>
+      <p>Human Systems Engineering student at Arizona State University with a passion for designing systems that improve how people interact with technology. My experience in sales, customer service, and technical support at Best Buy and Target has strengthened my leadership, communication, problem-solving, and adaptability in fast-paced, customer-focused environments.</p>
+      <p>Through academic projects and research, I've developed experience analyzing data, creating visualizations, and translating insights into practical recommendations using tools such as Excel and Tableau. I enjoy combining analytical thinking with an understanding of human behavior to create solutions that are intuitive, efficient, and user-centered.</p>
+      <p>As I continue building my technical skill set, I'm seeking opportunities in Human Factors Engineering, UX Research, Data Analytics, and User Experience where I can contribute to designing products and systems that make technology more accessible, effective, and meaningful.</p>
+      <p class="mono" style="font-size: 12px; color: var(--ink); margin-top: 30px; letter-spacing: 0.08em;">Core Skills</p>
+      <div class="skill-tags">
+        <span class="skill-tag mono">Human Factors Engineering</span>
+        <span class="skill-tag mono">UX Research</span>
+        <span class="skill-tag mono">User-Centered Design</span>
+        <span class="skill-tag mono">Usability Testing</span>
+        <span class="skill-tag mono">Data Analysis</span>
+        <span class="skill-tag mono">Data Visualization</span>
+        <span class="skill-tag mono">Microsoft Excel</span>
+        <span class="skill-tag mono">Tableau</span>
+        <span class="skill-tag mono">Research Methods</span>
+        <span class="skill-tag mono">Human-Computer Interaction</span>
+        <span class="skill-tag mono">Process Improvement</span>
+        <span class="skill-tag mono">Systems Thinking</span>
+        <span class="skill-tag mono">Problem Solving</span>
+        <span class="skill-tag mono">Technical Communication</span>
+        <span class="skill-tag mono">Customer Experience</span>
+        <span class="skill-tag mono">Cross-Functional Collaboration</span>
+        <span class="skill-tag mono">Leadership</span>
+        <span class="skill-tag mono">Public Speaking</span>
+        <span class="skill-tag mono">Bilingual (English &amp; Portuguese)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== EXPERIENCE ==================== -->
+<section id="experience" class="panel-section">
+  <p class="eyebrow mono center">02 — Experience</p>
+  <h2 class="center" style="font-size: clamp(28px, 5vw, 48px); margin-bottom: 40px;">On the Record</h2>
+
+  <div class="timeline">
+    <article class="timeline-item pop">
+      <div class="timeline-head">
+        <h3>Specialty Sales Professional</h3>
+        <span class="mono timeline-date">Jul 2024 — Present</span>
+      </div>
+      <p class="mono timeline-org">Target — Gilbert, Arizona</p>
+      <ul>
+        <li>Provide personalized tech solutions and product demos to enhance customer experience in the Electronics department</li>
+        <li>Adapt communication styles to build relationships and tailor recommendations for video games, smart home tech, and home entertainment systems</li>
+        <li>Maintain a well-organized, interactive sales floor that boosts customer confidence in technology purchases</li>
+      </ul>
+    </article>
+
+    <article class="timeline-item pop">
+      <div class="timeline-head">
+        <h3>Consultation Agent</h3>
+        <span class="mono timeline-date">Oct 2022 — Sep 2023</span>
+      </div>
+      <p class="mono timeline-org">Best Buy — Gilbert, Arizona</p>
+      <ul>
+        <li>Diagnosed and repaired computers, smartphones, and home entertainment systems, ensuring optimal performance and customer satisfaction</li>
+        <li>Provided expert recommendations for system upgrades, increasing efficiency and usability for customers</li>
+        <li>Collaborated with the team to manage workflow, ensuring timely repairs and excellent service delivery</li>
+      </ul>
+    </article>
+
+    <article class="timeline-item pop">
+      <div class="timeline-head">
+        <h3>Sales Advisor</h3>
+        <span class="mono timeline-date">Nov 2021 — Oct 2022</span>
+      </div>
+      <p class="mono timeline-org">Best Buy — Gilbert, Arizona</p>
+    </article>
+
+    <article class="timeline-item pop">
+      <div class="timeline-head">
+        <h3>Student Worker</h3>
+        <span class="mono timeline-date">Aug 2023 — Dec 2023</span>
+      </div>
+      <p class="mono timeline-org">Arizona State University — Tempe, Arizona</p>
+      <ul>
+        <li>Assisted in coordinating university events, ensuring smooth setup and technical support for AV equipment</li>
+        <li>Worked alongside the ASU Alumni Association staff to create organized, high-quality events that engaged students and alumni</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<!-- ==================== EDUCATION ==================== -->
+<section id="education" class="panel-section">
+  <p class="eyebrow mono center">03 — Education</p>
+  <h2 class="center" style="font-size: clamp(28px, 5vw, 48px); margin-bottom: 40px;">Coursework &amp; Credentials</h2>
+
+  <div class="timeline">
+    <article class="timeline-item pop">
+      <div class="timeline-head">
+        <h3>B.A.S. — Human Systems Engineering</h3>
+        <span class="mono timeline-date">2023 — 2026</span>
+      </div>
+      <p class="mono timeline-org">Arizona State University · Senior</p>
+      <p>Medallion Scholars Program (2027 Cohort Lead) &middot; Founder &amp; Co-President, The Comic Book Club @ASU Poly &middot; Undergraduate Representative, Human Factors and Ergonomics Society (HFES) &middot; Member, &Phi;&Iota;&Alpha; Phi Iota Alpha</p>
+      <p class="mono" style="font-size: 11.5px; color: #666; margin-top: 10px;">Awards: Medallion Scholarship Recipient &middot; New American University Scholar (Dean's Award) &middot; SVB / First Citizens Bank Scholarship Recipient &middot; Dean's List 2024</p>
+    </article>
+
+    <article class="timeline-item pop">
+      <div class="timeline-head">
+        <h3>High School Diploma</h3>
+        <span class="mono timeline-date">2019 — 2023</span>
+      </div>
+      <p class="mono timeline-org">Casteel High School · GPA 4.0+</p>
+      <p>National Honors Society &middot; Skills USA</p>
+    </article>
+  </div>
+
+  <div class="cert-row">
+    <div class="cert-card pop">
+      <p class="mono cert-issued">Issued May 2025</p>
+      <h3 style="font-size: 16px;">Data Analytics Track: Tableau</h3>
+      <p class="mono" style="font-size: 11px; color: #666;">Arizona State University · The Global Career Accelerator</p>
+    </div>
+    <div class="cert-card pop">
+      <p class="mono cert-issued">Issued Mar 2025</p>
+      <h3 style="font-size: 16px;">Data Analytics Track: Excel</h3>
+      <p class="mono" style="font-size: 11px; color: #666;">Arizona State University · The Global Career Accelerator</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== WORK / PRODUCT SECTIONS ==================== -->
+<section id="work">
+  <div style="text-align:center; margin-bottom: 36px;">
+    <p class="eyebrow mono">04 — Work</p>
+    <h2 style="font-size: clamp(28px, 5vw, 48px);">Selected Pieces</h2>
+  </div>
+
+  <div class="filter-tabs" id="filter-tabs"></div>
+
+  <div class="dropzone pop" id="dropzone">
+    <p class="dropzone-title">Drop new work here</p>
     <p class="dropzone-sub">or <span class="hl">browse your files</span> — JPG, PNG, WEBP, GIF, SVG</p>
     <input type="file" id="file-input" accept="image/*" multiple>
     <div class="category-row" onclick="event.stopPropagation()">
@@ -474,30 +790,26 @@
     <p class="upload-status" id="upload-status"></p>
   </div>
 
-  <div class="filter-tabs" id="filter-tabs"></div>
-
-  <div class="gallery" id="gallery">
-    <div class="empty-state" id="empty-state">No pieces catalogued yet.</div>
+  <div class="work">
+    <div class="gallery" id="gallery">
+      <div class="empty-state" id="empty-state">No pieces catalogued yet.</div>
+    </div>
   </div>
-
-<section style="max-width: 1180px; margin: 0 auto 56px; padding: 0 32px;">
-  <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #c1432e; margin: 0 0 10px;">Tableau Dashboard</p>
-  <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; margin: 0 0 20px; color: #1a3c5e;">Grid Energy Data Center Analysis</h2>
-
-  <div style="border: 1px solid #201e1b; background: #f7f5f0; padding: 16px;">
-    <img
-      src="images/energy-dashboard-screenshot_1.png"
-      alt="Tableau dashboard showing net production, renewable energy percentage, and energy source by region for Intel data centers"
-      style="display: block; width: 100%; height: auto; border: 1px solid #d3cfc5;">
-  </div>
-  <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #55524b; margin-top: 10px;">
-    Built in Tableau — net production by region, renewable energy share, and energy source trends over 2022.
-  </p>
 </section>
 
+<!-- ==================== CTA ==================== -->
+<section class="cta" id="contact">
+  <div class="cta-inner">
+    <h2 class="display">Let's build<br>something human.</h2>
+    <p class="mono">Open to internship &amp; full-time roles in Data Analytics, UX Research &amp; Human Factors Engineering</p>
+    <div class="cta-buttons">
+      <a href="mailto:kevinkruzz@outlook.com" class="btn-primary pop">Email Me</a>
+      <a href="assets/Kevin_Cruz_Resume_2026.pdf" download class="btn-secondary pop">Download Resume</a>
+    </div>
+  </div>
+</section>
 
-  <footer>Design Archive — powered by Firebase</footer>
-</div>
+<footer>Kevin Cruz — Portfolio — Powered by Firebase</footer>
 
 <div class="lightbox" id="lightbox">
   <img id="lightbox-img" src="" alt="">
@@ -505,8 +817,8 @@
 </div>
 
 <div class="modal-backdrop" id="modal-backdrop">
-  <div class="modal">
-    <h2>Sign in to manage archive</h2>
+  <div class="modal pop">
+    <h2 class="display" style="font-size:20px;">Sign in</h2>
     <p class="modal-error" id="modal-error"></p>
     <input type="email" id="modal-email" placeholder="Email">
     <input type="password" id="modal-password" placeholder="Password">
@@ -517,37 +829,73 @@
   </div>
 </div>
 
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<!-- Firebase SDKs (cdnjs mirror — loads reliably in sandboxed previews too) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-app-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-auth-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-firestore-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-storage-compat.min.js"></script>
 
 <script>
-  // =====================================================================
-  // STEP 1: Paste your Firebase config below (from Firebase Console ->
-  // Project settings -> General -> Your apps -> SDK setup and config)
-  // =====================================================================
+  // ---- Firebase config (reused from existing prototype) ----
   const firebaseConfig = {
-  apiKey: "AIzaSyCcWlG3d4zWsphxdoNsQt7LopR9A5Vc0zc",
-  authDomain: "my-portfolio-3e4b6.firebaseapp.com",
-  projectId: "my-portfolio-3e4b6",
-  storageBucket: "my-portfolio-3e4b6.firebasestorage.app",
-  messagingSenderId: "287085051834",
-  appId: "1:287085051834:web:b3747f9a7f68e6d9d26783",
-  measurementId: "G-PHVHYWQD71"
+    apiKey: "AIzaSyCcWlG3d4zWsphxdoNsQt7LopR9A5Vc0zc",
+    authDomain: "my-portfolio-3e4b6.firebaseapp.com",
+    projectId: "my-portfolio-3e4b6",
+    storageBucket: "my-portfolio-3e4b6.firebasestorage.app",
+    messagingSenderId: "287085051834",
+    appId: "1:287085051834:web:b3747f9a7f68e6d9d26783",
+    measurementId: "G-PHVHYWQD71"
   };
 
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-  const storage = firebase.storage();
+  const firebaseAvailable = typeof firebase !== 'undefined';
+  let auth, db, storage;
+  if (firebaseAvailable) {
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+    storage = firebase.storage();
+  } else {
+    console.warn('Firebase SDK did not load — showing local work only, sign-in/upload disabled.');
+  }
 
+  // ==================== ADAPTIVE HEADER ====================
+  const header = document.getElementById('site-header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  // ==================== SCROLL-SCRUB HERO VIDEO ====================
+  const heroWrap = document.querySelector('.hero');
+  const video = document.getElementById('name-video');
+  const heroFallback = document.getElementById('hero-fallback');
+  let videoReady = false;
+
+  video.addEventListener('loadedmetadata', () => { videoReady = true; heroFallback.style.display = 'none'; });
+
+  function scrubHero() {
+    if (!videoReady || !video.duration) return;
+    const rect = heroWrap.getBoundingClientRect();
+    const total = heroWrap.offsetHeight - window.innerHeight;
+    const progress = Math.min(Math.max(-rect.top / total, 0), 1);
+    const targetTime = progress * video.duration;
+    if (Math.abs(video.currentTime - targetTime) > 0.03) {
+      video.currentTime = targetTime;
+    }
+  }
+  window.addEventListener('scroll', () => requestAnimationFrame(scrubHero), { passive: true });
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) {
+    // Respect reduced motion: don't scrub, just show a static frame / fallback headline.
+    video.style.display = 'none';
+    heroFallback.style.display = 'block';
+  }
+
+  // ==================== GALLERY STATE ====================
   const dropzone = document.getElementById('dropzone');
   const fileInput = document.getElementById('file-input');
   const gallery = document.getElementById('gallery');
   const emptyState = document.getElementById('empty-state');
-  const pieceCount = document.getElementById('piece-count');
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxCaption = document.getElementById('lightbox-caption');
@@ -566,18 +914,29 @@
   const filterTabs = document.getElementById('filter-tabs');
 
   let isSignedIn = false;
-  let pieceElements = {};
   let allPieces = [];
   let activeFilter = 'All';
+
+  // Kevin's existing work, baked in so it shows without needing a manual re-upload.
+ 
+ const localPieces = [
+    { id: 'local-2', data: { name: 'Phi Iota Alpha — Chapter Launch', imageURL: 'assets/work/phi-iota-alpha-presents.png', dims: '640×640px', category: 'Branding', catNo: '001', local: true } },
+    { id: 'local-3', data: { name: 'Comic Book Club — Recruitment Flyer', imageURL: 'assets/work/comic-club-poster-3.png', dims: '448×576px', category: 'Event Design', catNo: '002', local: true } },
+    { id: 'local-4', data: { name: 'Phi Iota Alpha — Spring 2026 Events', imageURL: 'assets/work/spring-2026-recruitment.png', dims: '640×640px', category: 'Branding', catNo: '003', local: true } },
+    { id: 'local-6', data: { name: 'Intel Data Center Energy Analysis', imageURL: 'assets/work/intel-dashboard.png', dims: '996×784px', category: 'Data Analytics', catNo: '004', local: true } },
+    { id: 'local-7', data: { name: 'The Cost of Intelligence — HSE 598 Research Poster', imageURL: 'assets/work/hse598-research-poster.png', dims: '8000×5257px', category: 'Research', catNo: '005', local: true } }
+  ];
+
+  const ALL_CATEGORIES = ['Poster', 'Project', 'Graphic', 'Branding', 'Illustration', 'Event Design', 'Data Analytics', 'Research'];
+  let hiddenLocalIds = [];
+  let localOverrides = {};
 
   categorySelect.addEventListener('change', () => {
     categoryCustom.classList.toggle('visible', categorySelect.value === '__custom__');
   });
 
   function getSelectedCategory() {
-    if (categorySelect.value === '__custom__') {
-      return categoryCustom.value.trim() || 'Uncategorized';
-    }
+    if (categorySelect.value === '__custom__') return categoryCustom.value.trim() || 'Uncategorized';
     return categorySelect.value;
   }
 
@@ -587,24 +946,23 @@
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
 
-  function formatDate(iso) {
-    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
-  }
-
-  function updateCount(n) {
-    pieceCount.textContent = String(n).padStart(3, '0');
-    emptyState.style.display = n ? 'none' : 'block';
-  }
-
   function renderPiece(id, piece) {
     const el = document.createElement('div');
-    el.className = 'piece';
+    el.className = 'piece pop' + (isSignedIn ? ' editable' : '');
+
+    const media = document.createElement('div');
+    media.className = 'piece-media';
 
     const img = document.createElement('img');
     img.src = piece.imageURL;
     img.alt = piece.name;
     img.addEventListener('click', () => openLightbox(piece));
-    el.appendChild(img);
+    media.appendChild(img);
+
+    const badge = document.createElement('span');
+    badge.className = 'piece-badge mono';
+    badge.textContent = 'No. ' + piece.catNo;
+    media.appendChild(badge);
 
     const removeBtn = document.createElement('button');
     removeBtn.className = 'remove-btn' + (isSignedIn ? ' enabled' : '');
@@ -614,30 +972,59 @@
       e.stopPropagation();
       if (!isSignedIn) return;
       if (!confirm('Remove "' + piece.name + '" from the archive?')) return;
-      try {
-        await storage.ref(piece.storagePath).delete();
-      } catch (err) { console.warn('Storage delete failed', err); }
-      await db.collection('pieces').doc(id).delete();
+      if (piece.local) {
+        hiddenLocalIds.push(id);
+        await db.collection('meta').doc('gallery').set({ hiddenLocalIds, localOverrides }, { merge: true });
+      } else {
+        try { await storage.ref(piece.storagePath).delete(); } catch (err) { console.warn('Storage delete failed', err); }
+        await db.collection('pieces').doc(id).delete();
+      }
+      renderGallery();
     });
-    el.appendChild(removeBtn);
+    media.appendChild(removeBtn);
+
+    el.appendChild(media);
 
     const placard = document.createElement('div');
     placard.className = 'placard';
     placard.innerHTML = `
       <div class="title">${piece.name}</div>
-      <span class="no">No. ${piece.catNo}</span>
-      <span class="category">${piece.category || 'Uncategorized'}</span>
-      <span>${piece.dims}</span>
+      <div class="meta">
+        <span class="category">${piece.category || 'Uncategorized'}</span>
+        <span>${piece.dims || ''}</span>
+      </div>
     `;
     el.appendChild(placard);
 
+    const editRow = document.createElement('div');
+    editRow.className = 'edit-controls';
+    const editSelect = document.createElement('select');
+    ALL_CATEGORIES.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat;
+      if (cat === piece.category) opt.selected = true;
+      editSelect.appendChild(opt);
+    });
+    editSelect.addEventListener('change', async () => {
+      const newCat = editSelect.value;
+      if (piece.local) {
+        localOverrides[id] = { ...(localOverrides[id] || {}), category: newCat };
+        await db.collection('meta').doc('gallery').set({ hiddenLocalIds, localOverrides }, { merge: true });
+      } else {
+        await db.collection('pieces').doc(id).update({ category: newCat });
+      }
+      renderGallery();
+    });
+    editRow.appendChild(editSelect);
+    el.appendChild(editRow);
+
     gallery.appendChild(el);
-    pieceElements[id] = el;
   }
 
   function openLightbox(piece) {
     lightboxImg.src = piece.imageURL;
-    lightboxCaption.textContent = `No. ${piece.catNo} — ${piece.name} — ${piece.category || 'Uncategorized'} — ${piece.dims} — ${formatDate(piece.dateISO)}`;
+    lightboxCaption.textContent = `No. ${piece.catNo} — ${piece.name} — ${piece.category || 'Uncategorized'}`;
     lightbox.classList.add('open');
   }
   lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
@@ -647,72 +1034,75 @@
     filterTabs.innerHTML = '';
     categories.forEach(cat => {
       const tab = document.createElement('button');
-      tab.className = 'filter-tab' + (cat === activeFilter ? ' active' : '');
+      tab.className = 'filter-tab pop' + (cat === activeFilter ? ' active' : '');
       tab.textContent = cat;
-      tab.addEventListener('click', () => {
-        activeFilter = cat;
-        renderGallery();
-      });
+      tab.addEventListener('click', () => { activeFilter = cat; renderGallery(); });
       filterTabs.appendChild(tab);
     });
   }
 
-  function renderGallery() {
-    gallery.innerHTML = '';
-    pieceElements = {};
-    renderFilterTabs();
-
-    const visible = activeFilter === 'All'
-      ? allPieces
-      : allPieces.filter(p => (p.data.category || 'Uncategorized') === activeFilter);
-
-    visible.forEach(p => renderPiece(p.id, p.data));
-
-    if (visible.length === 0) {
-      gallery.appendChild(emptyState);
-    }
-    updateCount(allPieces.length);
+  function getVisiblePieces() {
+    const visibleLocal = localPieces
+      .filter(p => !hiddenLocalIds.includes(p.id))
+      .map(p => localOverrides[p.id] ? { ...p, data: { ...p.data, ...localOverrides[p.id] } } : p);
+    return visibleLocal;
   }
 
-  // ---- Live sync from Firestore, ordered by catalog number ----
-  db.collection('pieces').orderBy('catNo', 'asc').onSnapshot((snapshot) => {
-    allPieces = [];
-    snapshot.forEach((doc) => allPieces.push({ id: doc.id, data: doc.data() }));
-    renderGallery();
-  }, (err) => {
-    console.error('Firestore sync error', err);
-    uploadStatus.textContent = 'Could not load archive — check Firebase config.';
-  });
+  function renderGallery() {
+    gallery.innerHTML = '';
+    renderFilterTabs();
+    const visible = activeFilter === 'All' ? allPieces : allPieces.filter(p => (p.data.category || 'Uncategorized') === activeFilter);
+    visible.forEach(p => renderPiece(p.id, p.data));
+    if (visible.length === 0) gallery.appendChild(emptyState);
+  }
 
-  // ---- Upload handling ----
+  if (firebaseAvailable) {
+    db.collection('meta').doc('gallery').onSnapshot((doc) => {
+      const metaData = doc.exists ? doc.data() : {};
+      hiddenLocalIds = metaData.hiddenLocalIds || [];
+      localOverrides = metaData.localOverrides || {};
+      db.collection('pieces').orderBy('catNo', 'asc').onSnapshot((snapshot) => {
+        const firebasePieces = [];
+        snapshot.forEach((doc) => firebasePieces.push({ id: doc.id, data: doc.data() }));
+        allPieces = [...getVisiblePieces(), ...firebasePieces];
+        renderGallery();
+      }, (err) => {
+        console.error('Firestore sync error', err);
+        allPieces = [...getVisiblePieces()];
+        renderGallery();
+        uploadStatus.textContent = 'Could not load new uploads — showing saved work only.';
+      });
+    });
+  } else {
+    allPieces = [...localPieces];
+    renderGallery();
+    authBtn.style.display = 'none';
+  }
+
   async function handleFiles(fileList) {
     if (!isSignedIn) return;
     const category = getSelectedCategory();
     const countSnap = await db.collection('pieces').get();
-    let counter = countSnap.size;
+    let counter = countSnap.size + localPieces.length;
 
     for (const file of [...fileList]) {
       if (!file.type.startsWith('image/')) continue;
       counter += 1;
       const catNo = String(counter).padStart(3, '0');
       uploadStatus.textContent = `Uploading ${file.name}...`;
-
       try {
         const dims = await getImageDimensions(file);
         const path = `pieces/${Date.now()}-${file.name}`;
         const ref = storage.ref(path);
         await ref.put(file);
         const imageURL = await ref.getDownloadURL();
-
         await db.collection('pieces').add({
           name: file.name.replace(/\.[^/.]+$/, ''),
-          imageURL,
-          storagePath: path,
+          imageURL, storagePath: path,
           dims: `${dims.width}×${dims.height}px`,
           size: formatBytes(file.size),
           dateISO: new Date().toISOString(),
-          catNo,
-          category
+          catNo, category
         });
       } catch (err) {
         console.error(err);
@@ -737,57 +1127,50 @@
 
   dropzone.addEventListener('click', () => { if (isSignedIn) fileInput.click(); });
   fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
-
-  ['dragenter', 'dragover'].forEach(evt =>
-    dropzone.addEventListener(evt, (e) => {
-      e.preventDefault();
-      if (isSignedIn) dropzone.classList.add('drag-over');
-    })
-  );
-  ['dragleave', 'drop'].forEach(evt =>
-    dropzone.addEventListener(evt, (e) => {
-      e.preventDefault();
-      dropzone.classList.remove('drag-over');
-    })
-  );
+  ['dragenter', 'dragover'].forEach(evt => dropzone.addEventListener(evt, (e) => { e.preventDefault(); if (isSignedIn) dropzone.classList.add('drag-over'); }));
+  ['dragleave', 'drop'].forEach(evt => dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('drag-over'); }));
   dropzone.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files));
 
-  // ---- Auth UI ----
-  authBtn.addEventListener('click', () => {
-    if (isSignedIn) {
-      auth.signOut();
-    } else {
-      modalBackdrop.classList.add('open');
+  if (firebaseAvailable) {
+    authBtn.addEventListener('click', () => {
+      if (isSignedIn) {
+        auth.signOut();
+      } else {
+        modalBackdrop.classList.add('open');
+        modalError.textContent = '';
+        modalEmail.value = '';
+        modalPassword.value = '';
+        modalEmail.focus();
+      }
+    });
+    modalCancel.addEventListener('click', () => modalBackdrop.classList.remove('open'));
+    modalSubmit.addEventListener('click', async () => {
       modalError.textContent = '';
-      modalEmail.value = '';
-      modalPassword.value = '';
-      modalEmail.focus();
-    }
-  });
+      try {
+        await auth.signInWithEmailAndPassword(modalEmail.value.trim(), modalPassword.value);
+        modalBackdrop.classList.remove('open');
+      } catch (err) {
+        modalError.textContent = 'Sign-in failed — check email/password.';
+      }
+    });
+    [modalEmail, modalPassword].forEach(input => input.addEventListener('keydown', (e) => { if (e.key === 'Enter') modalSubmit.click(); }));
 
-  modalCancel.addEventListener('click', () => modalBackdrop.classList.remove('open'));
-
-  modalSubmit.addEventListener('click', async () => {
-    modalError.textContent = '';
-    try {
-      await auth.signInWithEmailAndPassword(modalEmail.value.trim(), modalPassword.value);
-      modalBackdrop.classList.remove('open');
-    } catch (err) {
-      modalError.textContent = 'Sign-in failed — check email/password.';
-    }
-  });
-
-  [modalEmail, modalPassword].forEach(input =>
-    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') modalSubmit.click(); })
-  );
-
-  auth.onAuthStateChanged((user) => {
-    isSignedIn = !!user;
-    authBtn.textContent = isSignedIn ? 'Sign Out' : 'Sign In';
-    authBtn.classList.toggle('signed-in', isSignedIn);
-    dropzone.classList.toggle('visible', isSignedIn);
-    document.querySelectorAll('.remove-btn').forEach(btn => btn.classList.toggle('enabled', isSignedIn));
-  });
+    auth.onAuthStateChanged((user) => {
+      isSignedIn = !!user;
+      authBtn.textContent = isSignedIn ? 'Sign Out' : 'Sign In';
+      authBtn.classList.toggle('signed-in', isSignedIn);
+      dropzone.classList.toggle('visible', isSignedIn);
+      renderGallery();
+    });
+  }
+    auth.onAuthStateChanged((user) => {
+      isSignedIn = !!user;
+      authBtn.textContent = isSignedIn ? 'Sign Out' : 'Sign In';
+      authBtn.classList.toggle('signed-in', isSignedIn);
+      dropzone.classList.toggle('visible', isSignedIn);
+      document.querySelectorAll('.remove-btn').forEach(btn => btn.classList.toggle('enabled', isSignedIn));
+    });
+  }
 </script>
 
 </body>
